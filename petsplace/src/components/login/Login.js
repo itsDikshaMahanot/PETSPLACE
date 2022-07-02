@@ -1,4 +1,5 @@
 import React, { useState, notification } from 'react';
+import { useNavigate } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
 import { db } from "../../firebase";
 import { collection, addDoc } from "firebase/firestore";
@@ -12,20 +13,26 @@ export default function Login() {
     const getInputs = (event) => {
         let input = { [event.target.name]: event.target.value };
         setInputs({ ...inputs, ...input })
-        event.target.value('');
     }
 
+    // const nav = useNavigate();
+    // const [error, setError] =useState ({
+    //     status: false,
+    //     message:"",
+    //     type:""
+
+    // });
 
     const signIN = async () => {
         await signInWithEmailAndPassword(auth, inputs.email, inputs.password)
             .then((res) => {
                 console.log(res.user)
                 alert("successfull logged in")
-            },
-                setInputs(''))
+            })
             .catch((err) => {
                 alert(err.message);
             })
+
 
     }
     const createUser = async () => {
@@ -38,19 +45,13 @@ export default function Login() {
                     email: inputs.email,
                 }
                 );
-                this.inputs.email.value = "";
-                this.inputs.password.value = "";
                 console.log(res.user)
             })
             .catch((err) => {
                 alert(err.message);
             })
     }
-
-
-    const reset = () => {
-    }
-
+    
     return (
         <>
             <div className="flex items-center justify-center h-screen bg-green-900">
@@ -82,6 +83,7 @@ export default function Login() {
                                         width="17.607"
                                         height="17.076"
                                         viewBox="0 2 17.607 17.076"
+                                        onClick={"show = !show"}
                                     >
                                         <path
                                             id="eye-off"
@@ -101,7 +103,7 @@ export default function Login() {
                                 <button onClick={createUser} class="sm:mr-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
                                     Create user
                                 </button>
-                                <button onClick={() => { signIN(); reset() }} class="sm:mr-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" >
+                                <button onClick={signIN} class="sm:mr-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" >
                                     Sign In
                                 </button>
                                 <a class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="/reset">
